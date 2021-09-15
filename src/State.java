@@ -19,7 +19,10 @@ public class State {
 	private int covidDeaths;
 	private int medianIncome;
 	private float violentRate;
-	
+	private float caseRate;
+	private float deathRate;
+	private float caseFatalityRate;
+
 	/**
 	 * Constructor for State objects
 	 */
@@ -33,18 +36,11 @@ public class State {
 		setCovidDeaths(Integer.parseInt(elements[6]));
 		setMedianIncome(Integer.parseInt(elements[7]));
 		setViolentRate(Float.parseFloat(elements[8]));
+		setCaseRate((float)this.getCovidCases()/this.getPopulation() * 100000);
+		setDeathRate((float)this.getCovidDeaths()/this.getPopulation() * 100000);
+		setCaseFatalityRate((float)this.getCovidDeaths()/this.getCovidCases());
 	}
-	public static void statePrinter(State state) {
-		System.out.println("State: " + state.getName() );
-		System.out.println("Capitol: " + state.getCapitol() );
-		System.out.println("Region: " + state.getRegion() );
-		System.out.println("House Seats: " + state.getHouseSeats() );
-		System.out.println("Population: " + state.getPopulation() );
-		System.out.println("Covid Cases: " + state.getCovidCases()	 );
-		System.out.println("Covid Deaths: " + state.getCovidDeaths() );
-		System.out.println("Median Household Income: " + state.getMedianIncome() );
-		System.out.println("Violent Crime Rate: " + state.getViolentRate() );
-	}
+
 	public String getName() {
 		return name;
 	}
@@ -99,4 +95,22 @@ public class State {
 	public void setViolentRate(float violentRate) {
 		this.violentRate = violentRate;
 	}
-}
+	public float getCaseRate() {
+		return caseRate;
+	}
+	public void setCaseRate(float caseRate) {
+		this.caseRate = caseRate;
+	}
+	public float getDeathRate() {
+		return deathRate;
+	}
+	public void setDeathRate(float deathRate) {
+		this.deathRate = deathRate;
+	}
+	public float getCaseFatalityRate() {
+		return caseFatalityRate;
+	}
+	public void setCaseFatalityRate(float caseFatalityRate) {
+		this.caseFatalityRate = caseFatalityRate;
+	}
+} // end class
