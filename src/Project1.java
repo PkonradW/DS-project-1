@@ -8,14 +8,14 @@ public class Project1 {
 
 	public static void main(String[] args) throws IOException {
 
-		File stateFile;
+		
 		int choice = 0;
 		boolean isAlphabetical = false;
-		stateFile = new File("States1.csv"); // hardcoded for now, don't leave me like this
-		Scanner scan = new Scanner(System.in);
+		//File stateFile = getFile();
+		File stateFile = new File("States1.csv"); // hardcoded for now, don't leave me like this
 		BufferedReader fileReader = new BufferedReader(new FileReader(stateFile));
 		State[] stateList = new State[50]; // assumes that there are a maximum of 50 records in file
-		String firstLine[] =fileReader.readLine().split(",");
+		fileReader.readLine().split(","); // ignore top line of CSV file
 		
 		for(int i = 0; i < 50; i++) {	// load array of States with entities constructed from CSV data
 			String[] elementArray = fileReader.readLine().split(",");
@@ -37,6 +37,7 @@ public class Project1 {
 				isAlphabetical = false;
 			}
 			else if (choice == 5) {		// find state for given name
+				Scanner scan = new Scanner(System.in);
 				System.out.print("enter state name: ");
 				if (isAlphabetical) {
 					binarySearch(scan.nextLine(), stateList);
@@ -57,16 +58,20 @@ public class Project1 {
 	 * Prompts user for the name of the CSV file to use
 	 * @return userInput: string that user specified with keyboard input
 	 */
-	public static String getInput() {
+	public static File getFile() {
 		Scanner inputScanner = new Scanner(System.in);
 		System.out.print("File name: ");
-		String userInput = inputScanner.nextLine();
-		inputScanner.close();
-		return userInput;
+		File userFile = new File(inputScanner.nextLine());
+		while (!userFile.exists()) {
+			System.out.println("File does not exist");
+			System.out.println("File name: ");
+			userFile = new File(inputScanner.nextLine());
+		}
+		return userFile;
 	}
 	public static int printMenu() {
 		Scanner menuScanner = new Scanner(System.in);
-		int choice;
+		int choice = 0;
 		do {
 			System.out.println();
 			System.out.println("1. Print a states report");
@@ -78,9 +83,13 @@ public class Project1 {
 			System.out.println("7. quit");
 			System.out.println();
 			System.out.print("Enter selection and press return to continue: ");
-			choice = Integer.parseInt(menuScanner.nextLine());
+			try {
+				choice = Integer.parseInt(menuScanner.nextLine());
+			} catch (Exception NumberFormatException){
+				System.out.println("  --Your input could not be processed, please only use integers as input.");
+			}
 			if (choice > 7 || choice < 1) {
-				System.out.println("Invalid input, please enter selections as an integer between 1 and 7 inclusive");
+				System.out.println("  --Invalid input, enter an integer between 1 and 7 inclusive.");
 			}
 		} while (choice > 7 && choice < 1);
 		return choice;
@@ -96,11 +105,13 @@ public class Project1 {
 		for (int i = 0; i < states.length - 1; i++) {
 			// largest = states[i]
 			for (j = i+1; j < states.length; j++) {
-				if(states[j].getCaseFatalityRate() < states[i].getCaseFatalityRate()){
+				if(states[j].getCaseFatalityRate() 
+						< states[i].getCaseFatalityRate()){
 					stateSwap(j, i, states);
 				}
 			}
 		}
+		System.out.println("State list sorted by Case Fatality Rate (CFR)");
 		return states;
 	}
 	public static State[] insertionSort(State[] states) {
@@ -114,6 +125,7 @@ public class Project1 {
 			}
 			states[j+1] = temp;
 		}
+		System.out.println("State list sorted by Median Household Income (MHI)");
 		return states;
 	}
 	public static State[] bubbleSort(State[] states) {
@@ -134,6 +146,7 @@ public class Project1 {
 				}
 			}
 		}
+		System.out.println("State list sorted Alphabetically");
 		return states;
 	}
 	public static void selectionSearch(String stateName, State[] states){
@@ -143,7 +156,7 @@ public class Project1 {
 				return;
 			}
 		}
-		System.out.println("Search failed.");
+		System.out.println("  --Search failed.");
 		return;
 	}
 	public static void binarySearch(String stateName, State[] states){
@@ -163,7 +176,7 @@ public class Project1 {
 				mid = (high + low) / 2;
 			}
 		}
-		System.out.println("search failed 😓");
+		System.out.println("  --search failed");
 	}
 	public static void singleStateReport(State state) {
 		System.out.println();
